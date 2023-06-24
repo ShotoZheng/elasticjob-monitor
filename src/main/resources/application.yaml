@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: springboot_elasticjob
+  datasource:
+    url: jdbc:mysql://192.168.160.128:3306/elastic_job?useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+elasticjob:
+  zookeeper:
+    serverlists: 192.168.160.128:2181
+    namespace: springboot_elasticjob
+    connectionTimeoutMilliseconds: 50000
+    sessionTimeoutMilliseconds: 50000
+    maxRetries: 3
+    maxSleepTimeMilliseconds: 50000
+    baseSleepTimeMilliseconds: 50000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*' ## 暴露所有 http actuator 端点
+  endpoint:
+    health:
+      ## 支持显示 health 端点明细
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}

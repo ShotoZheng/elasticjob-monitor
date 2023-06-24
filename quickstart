@@ -1,0 +1,11 @@
+# 启动 prometheus
+java -javaagent:/usr/local/jmx_exporter-parent-0.13.0/jmx_prometheus_javaagent-0.14.0.jar=3010:/usr/local/jmx_exporter-parent-0.13.0/jmx_exporter_config.yaml -jar /usr/local/example-test/elasticjob-0.0.1-SNAPSHOT.jar
+
+# 告警规则
+# sum(simple_job_monitor) by (application, sharding,taskJob)：表示下次 job 的执行时间
+# time() > bool (sum(simple_job_monitor) by (application, sharding,taskJob))+30：表示当前时间是否大于下次 job 的执行时间 + 30s，是则返回1，否则返回 0
+
+(time() > bool (sum(simple_job_monitor) by (application, sharding,taskJob))+30)>0
+
+假设一个 job 每小时执行一次，例如下一次 job 2 点执行。当前时间为 02:00:30 之后发现 2 点的 job 还没执行（若已经执行则下一次 job 为 3 点执行），
+则 prometheus 会触发告警
